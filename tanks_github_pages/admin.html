@@ -1,0 +1,16 @@
+
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админка</title><link rel="stylesheet" href="css/style.css"><script defer src="js/common.js"></script></head>
+<body><div class="wrap"><header><h1>Админка</h1><div class="spacer"></div><div id="nav"></div></header>
+<main><div class="panel"><h2>Настройки игры</h2><div class="notice">Пароль: <b>admin</b></div>
+<div class="row" style="margin:10px 0;"><input id="adminPass" type="password" placeholder="Пароль"><button id="login" class="primary">Войти</button></div>
+<div id="body" class="grid cols-3" style="display:none;"></div>
+<div class="row" style="margin-top:10px;display:none;" id="actions"><button id="apply" class="primary">Применить</button><button id="reset">Сбросить по умолчанию</button></div>
+</div></main><footer><span class="muted">Сохранение на время сессии</span></footer></div>
+<script>
+const F=[["speedF","Скорость вперёд"],["speedB","Скорость назад"],["turn","Поворот корпуса"],["turretTurn","Поворот башни"],["bulletSpeed","Скорость снаряда"],["reload","Перезарядка (мс)"],["bulletDmg","Урон снаряда (%)"],["fuelRate","Расход топлива %/сек"],["fuelGain","Пополнение бочкой (%)"],["barrelDmg","Урон бочки (%)"],["barrelRad","Радиус бочки (px)"],["barrelSpawn","Спавн бочек (мс)"],["fogRadiusUnits","Туман: радиус (× размер танка)"],["fogDark","Туман: затемнение (%)"],["mapScale","Масштаб карты (%)"],["camScale","Масштаб камеры (%)"],["lives","Жизней на бой"],["fps","FPS-эффект"]];
+document.getElementById("nav").innerHTML=nav(); const pass=document.getElementById("adminPass"), body=document.getElementById("body"), actions=document.getElementById("actions");
+document.getElementById("login").onclick=()=>{ if((pass.value||'').trim()!=='admin'){alert('Неверный пароль');return} const cfg=getConfig(); body.innerHTML=F.map(([k,l])=>`<label>${l}<input id="cfg_${k}" value="${cfg[k]??''}" type="number" step="0.1"></label>`).join(""); body.style.display='grid'; actions.style.display='flex'; };
+document.getElementById("apply").onclick=()=>{ const cfg=getConfig(); for(const [k] of F){ const el=document.getElementById("cfg_"+k); if(!el) continue; const v=parseFloat(el.value); if(!Number.isNaN(v)) cfg[k]=v; } setConfig(cfg); alert('Настройки применены.') };
+document.getElementById("reset").onclick=()=>{ setConfig(DEFAULT_CFG); alert('Сброшено к умолчанию.') };
+</script></body></html>
