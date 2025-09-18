@@ -4,9 +4,271 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Phaser Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #0b0b0b;
+      color: #e6e6e6;
+      font-family: 'Press Start 2P', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    body {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22%3E%3Cpath fill=%22%2300ffc6%22 stroke=%22%2303080f%22 stroke-width=%221.5%22 stroke-linejoin=%22square%22 d=%22M16 2v8h-6v4h6v6h4v-6h6v-4h-6V2z%22/%3E%3C/svg%3E") 15 15, crosshair;
+    }
+
+    .retro-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 18px 12px;
+      background: linear-gradient(#30323a, #1b1d22 60%, #14161a);
+      border-bottom: 4px solid #0a0b0d;
+      box-shadow: inset 0 2px 0 #5a5d6b, inset 0 -2px 0 #0a0b0d, 0 4px 12px rgba(0,0,0,0.6);
+      position: relative;
+      z-index: 2;
+    }
+
+    .retro-logo {
+      margin-right: 12px;
+      letter-spacing: 2px;
+      color: #ffe066;
+      text-shadow: 0 2px 0 #a67c00, 0 0 8px rgba(255, 224, 102, 0.6);
+      font-size: 14px;
+      user-select: none;
+    }
+
+    .retro-menu {
+      display: flex;
+      gap: 12px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .retro-button {
+      display: inline-block;
+      padding: 10px 14px;
+      color: #e6e6e6;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 1px;
+      background: linear-gradient(#5c5f71, #3b3e4a);
+      border: 2px solid #0a0b0d;
+      box-shadow: inset 0 2px 0 #8b8ea3, inset 0 -3px 0 #2a2c34, 0 3px 0 #0a0b0d, 0 6px 10px rgba(0,0,0,0.5);
+      text-shadow: 0 2px 0 rgba(0,0,0,0.6);
+      position: relative;
+      transition: transform 50ms ease, box-shadow 50ms ease, filter 120ms ease;
+      cursor: inherit;
+    }
+
+    .retro-button:before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      mix-blend-mode: screen;
+    }
+
+    .retro-button:hover {
+      filter: brightness(1.1) saturate(1.1);
+    }
+
+    .retro-button:active {
+      transform: translateY(2px);
+      box-shadow: inset 0 2px 0 #2a2c34, inset 0 -1px 0 #8b8ea3, 0 1px 0 #0a0b0d, 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    /* optional thin scanline across the nav like old CRT */
+    .retro-nav:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .tank-select {
+      max-width: 720px;
+      margin: 36px auto 0;
+      padding: 24px;
+      background: linear-gradient(#1c1e24, #111217 80%, #0a0b0d);
+      border: 3px solid #050608;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.08), inset 0 -2px 0 rgba(0,0,0,0.7), 0 10px 22px rgba(0,0,0,0.65);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tank-select:before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+
+    .tank-select__title {
+      margin: 0 0 20px;
+      font-size: 16px;
+      letter-spacing: 3px;
+      color: #7cf5ff;
+      text-shadow: 0 2px 0 #053a42, 0 0 12px rgba(124,245,255,0.6);
+    }
+
+    .tank-options {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .tank-option {
+      position: relative;
+      cursor: inherit;
+    }
+
+    .tank-option input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: inherit;
+    }
+
+    .tank-card {
+      width: 200px;
+      padding: 18px 16px 16px;
+      background: linear-gradient(#2b2e36, #1a1c23);
+      border: 3px solid #08090c;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.05), inset 0 -3px 0 rgba(0,0,0,0.7), 0 6px 18px rgba(0,0,0,0.6);
+      transition: transform 120ms ease, box-shadow 160ms ease, border-color 120ms ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      cursor: inherit;
+    }
+
+    .tank-card img {
+      width: 160px;
+      height: 106px;
+      image-rendering: pixelated;
+      border: 2px solid #0a0c11;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.04), 0 4px 12px rgba(0,0,0,0.5);
+      background: #08090c;
+    }
+
+    .tank-name {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: #ffe066;
+      text-shadow: 0 2px 0 #6b4b00, 0 0 10px rgba(255,224,102,0.45);
+    }
+
+    .tank-option input:checked + .tank-card {
+      border-color: #7cf5ff;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.18), inset 0 -3px 0 rgba(0,0,0,0.6), 0 0 18px rgba(124,245,255,0.35), 0 10px 24px rgba(0,0,0,0.65);
+      transform: translateY(-4px);
+    }
+
+    .tank-option input:focus-visible + .tank-card {
+      outline: 2px solid #7cf5ff;
+      outline-offset: 4px;
+    }
+
+    .tank-option:hover .tank-card {
+      transform: translateY(-2px);
+      box-shadow: inset 0 2px 0 rgba(255,255,255,0.08), inset 0 -3px 0 rgba(0,0,0,0.6), 0 8px 18px rgba(0,0,0,0.55);
+    }
+
+    .tank-option input:checked:hover + .tank-card {
+      transform: translateY(-6px);
+    }
+
+    .retro-cta {
+      display: inline-block;
+      padding: 14px 36px;
+      font-size: 14px;
+      letter-spacing: 4px;
+      color: #101215;
+      background: linear-gradient(#7cf5ff, #3bd4e6 60%, #12a4b8);
+      border: 4px solid #050608;
+      box-shadow: inset 0 3px 0 rgba(255,255,255,0.6), inset 0 -3px 0 rgba(0,0,0,0.4), 0 4px 0 #050608, 0 12px 24px rgba(0,0,0,0.55);
+      text-shadow: 0 -2px 0 rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      transition: transform 80ms ease, box-shadow 120ms ease, filter 160ms ease;
+      cursor: inherit;
+    }
+
+    .retro-cta:hover {
+      filter: brightness(1.1) saturate(1.2);
+    }
+
+    .retro-cta:active {
+      transform: translateY(3px);
+      box-shadow: inset 0 3px 0 rgba(0,0,0,0.3), inset 0 -3px 0 rgba(255,255,255,0.4), 0 2px 0 #050608, 0 8px 16px rgba(0,0,0,0.5);
+    }
+
+    /* Ensure canvas sits below nav and is centered on page */
+    .game-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    canvas#game {
+      outline: 3px solid #0a0b0d;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.8), inset 0 0 0 2px #2a2c34;
+      background: #000;
+      image-rendering: pixelated;
+    }
+  </style>
 </head>
 <body>
-  <canvas id="game"></canvas>
+  <nav class="retro-nav" role="navigation" aria-label="Main Navigation">
+    <div class="retro-logo">SEGMENTO</div>
+    <ul class="retro-menu">
+      <li><a class="retro-button" href="#home">HOME</a></li>
+      <li><a class="retro-button" href="#play">PLAY</a></li>
+      <li><a class="retro-button" href="#options">OPTIONS</a></li>
+      <li><a class="retro-button" href="#about">ABOUT</a></li>
+    </ul>
+  </nav>
+
+  <section class="tank-select" id="tank-select" aria-label="Tank Selection">
+    <h1 class="tank-select__title">CHOOSE YOUR WAR MACHINE</h1>
+    <div class="tank-options" role="list">
+      <label class="tank-option" role="presentation">
+        <input type="radio" name="tank" value="steel-viper" checked>
+        <div class="tank-card" role="listitem">
+          <img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 96 64%22 shape-rendering=%22crispEdges%22%3E%3Crect width=%2296%22 height=%2264%22 fill=%22%2314161a%22/%3E%3Crect x=%228%22 y=%2226%22 width=%2280%22 height=%2212%22 fill=%22%230f3329%22/%3E%3Crect x=%2212%22 y=%2230%22 width=%2272%22 height=%224%22 fill=%22%2341f0a3%22/%3E%3Crect x=%2264%22 y=%2218%22 width=%2220%22 height=%228%22 fill=%22%2341f0a3%22/%3E%3Crect x=%2260%22 y=%2220%22 width=%224%22 height=%224%22 fill=%22%230f3329%22/%3E%3Crect x=%2228%22 y=%2220%22 width=%2224%22 height=%2216%22 fill=%22%231b5d4a%22/%3E%3Crect x=%2232%22 y=%2224%22 width=%2216%22 height=%228%22 fill=%22%2362ffd0%22/%3E%3Crect x=%2240%22 y=%2212%22 width=%228%22 height=%2212%22 fill=%22%2341f0a3%22/%3E%3Crect x=%2244%22 y=%228%22 width=%2220%22 height=%226%22 fill=%22%2362ffd0%22/%3E%3Crect x=%2248%22 y=%2214%22 width=%2212%22 height=%224%22 fill=%22%230f3329%22/%3E%3C/svg%3E" alt="Steel Viper hover tank">
+          <div class="tank-name">STEEL VIPER</div>
+        </div>
+      </label>
+      <label class="tank-option" role="presentation">
+        <input type="radio" name="tank" value="crimson-hammer">
+        <div class="tank-card" role="listitem">
+          <img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 96 64%22 shape-rendering=%22crispEdges%22%3E%3Crect width=%2296%22 height=%2264%22 fill=%22%2314161a%22/%3E%3Crect x=%2210%22 y=%2228%22 width=%2276%22 height=%2210%22 fill=%22%23401313%22/%3E%3Crect x=%2214%22 y=%2230%22 width=%2268%22 height=%226%22 fill=%22%23ff6b6b%22/%3E%3Crect x=%2262%22 y=%2220%22 width=%2222%22 height=%226%22 fill=%22%23ff9f43%22/%3E%3Crect x=%2258%22 y=%2222%22 width=%224%22 height=%224%22 fill=%22%23401313%22/%3E%3Crect x=%2230%22 y=%2220%22 width=%2222%22 height=%2214%22 fill=%22%237a1b1b%22/%3E%3Crect x=%2234%22 y=%2224%22 width=%2214%22 height=%226%22 fill=%22%23ffb8b8%22/%3E%3Crect x=%2240%22 y=%2212%22 width=%228%22 height=%2210%22 fill=%22%23ff6b6b%22/%3E%3Crect x=%2244%22 y=%228%22 width=%2218%22 height=%226%22 fill=%22%23ffc371%22/%3E%3Crect x=%2248%22 y=%2214%22 width=%2210%22 height=%224%22 fill=%22%23401313%22/%3E%3C/svg%3E" alt="Crimson Hammer siege tank">
+          <div class="tank-name">CRIMSON HAMMER</div>
+        </div>
+      </label>
+    </div>
+    <button class="retro-cta" type="button">SELECT</button>
+  </section>
+
+  <div class="game-wrap">
+    <canvas id="game"></canvas>
+  </div>
   <script type="module" src="/main.js"></script>
 </body>
 </html>
