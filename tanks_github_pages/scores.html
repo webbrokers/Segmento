@@ -1,0 +1,12 @@
+
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Рекорды</title><link rel="stylesheet" href="css/style.css"><script defer src="js/common.js"></script></head>
+<body><div class="wrap"><header><h1>Рекорды (сессия)</h1><div class="spacer"></div><div id="nav"></div></header>
+<main><div class="panel"><table><thead><tr><th>Игрок</th><th>Побед</th><th>Время</th></tr></thead><tbody id="tbody"></tbody></table>
+<div class="row" style="margin-top:10px;"><button id="reset">Сбросить</button></div></div></main>
+<footer><span class="muted">Очищается при закрытии вкладки</span></footer></div>
+<script>
+document.getElementById("nav").innerHTML=nav();
+function render(){ const tb=document.getElementById('tbody'); const rows=getScores().map(s=>`<tr><td>${s.name}</td><td style="text-align:right">${s.wins}</td><td style="text-align:right">${s.timeSec.toFixed(1)}s</td></tr>`).join(''); tb.innerHTML=rows||`<tr><td colspan="3" class="muted">Пока пусто</td></tr>`; }
+render(); document.getElementById('reset').onclick=()=>{ setScores([]); render(); };
+</script></body></html>

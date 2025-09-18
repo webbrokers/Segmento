@@ -1,0 +1,16 @@
+:root{--ui-bg:#0f1115;--ui-panel:#171a21;--ui-text:#e6e7ea;--ui-accent:#4aa3ff;--ui-muted:#9aa0aa}
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--ui-bg);color:var(--ui-text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans",sans-serif}
+a{color:var(--ui-accent);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{display:grid;grid-template-rows:auto 1fr auto;min-height:100%}header,footer{background:var(--ui-panel);padding:10px 14px;display:flex;gap:12px;align-items:center}
+header h1{font-size:16px;margin:0;letter-spacing:.3px}header nav{display:flex;gap:10px}header .spacer{flex:1}
+main{padding:16px;display:grid;place-items:center}.panel{width:min(92vw,1000px);background:var(--ui-panel);border:1px solid #2a3347;border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.grid{display:grid;gap:10px}.grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.row{display:flex;gap:8px;align-items:center}
+button,select,input,textarea{background:#10131a;color:var(--ui-text);border:1px solid #232936;border-radius:8px;padding:8px 10px;outline:none}button{cursor:pointer}button.primary{background:var(--ui-accent);border-color:var(--ui-accent);color:#08121f;font-weight:600}
+.muted{color:var(--ui-muted);font-size:12px}
+.stage{width:min(96vw,1280px);aspect-ratio:4/3;background:#0a0c10;border:1px solid #222832;border-radius:12px;position:relative;overflow:hidden}
+canvas#game{width:100%;height:100%;display:block}canvas#minimap{position:absolute;left:12px;bottom:12px;width:5%;min-width:80px;aspect-ratio:1;border:1px solid #232936;background:radial-gradient(#0d0f14,#0a0c10);border-radius:6px;overflow:hidden}
+.hud{position:absolute;inset:0;pointer-events:none}.hud .bar{position:absolute;left:12px;right:12px;height:10px;border-radius:6px;background:#0e121a;border:1px solid #1f2633}.hud .bar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#35d07f,#4aa3ff);width:50%}.hud .top{top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.countdown{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:96px;font-weight:800;color:#e6e7ea;text-shadow:0 8px 24px rgba(0,0,0,.5);pointer-events:none}.countdown.active{display:flex}
+.notice{padding:10px;border:1px dashed #2a3347;border-radius:8px;background:#0e121a}
+table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #222832}

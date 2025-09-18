@@ -1,0 +1,30 @@
+
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Играть</title><link rel="stylesheet" href="css/style.css"><script defer src="js/common.js"></script><script defer src="js/game.js"></script></head>
+<body><div class="wrap"><header><h1>Игровой экран</h1><div class="spacer"></div><div id="nav"></div></header>
+<main>
+<div class="panel" style="margin-bottom:12px;">
+  <h2>Перед стартом</h2>
+  <div class="grid cols-3">
+    <label>Карта:<select id="mapSelect"><option value="proc-1">Процедурная #1</option><option value="proc-2">Процедурная #2</option><option value="proc-3">Процедурная #3</option><option value="url">Из URL (изображение)</option><option value="upload">Загрузить картинку</option></select></label>
+    <label>URL карты:<input id="mapUrl" type="url" placeholder="https://..."></label>
+    <label>Файл карты:<input id="mapFile" type="file" accept="image/*"></label>
+    <label>Танк:<select id="tankSelect"><option value="green">Зелёный (процедурный)</option><option value="sand">Песочный (процедурный)</option><option value="custom">Кастомный (основание+башня)</option></select></label>
+    <label>URL основания танка:<input id="hullUrl" type="url" placeholder="https://..."></label>
+    <label>URL башни (масштаб 0.5):<input id="turretUrl" type="url" placeholder="https://..."></label>
+    <label>Файл основания:<input id="hullFile" type="file" accept="image/*"></label>
+    <label>Файл башни:<input id="turretFile" type="file" accept="image/*"></label>
+    <label>FPS-эффект:<input id="cfg_fps" type="number" min="5" max="60" step="1"></label>
+  </div>
+  <div class="row" style="margin-top:10px;"><button id="startBtn" class="primary">Старт</button><span class="muted">Имя игрока: «Игрок»</span></div>
+</div>
+<div class="stage">
+  <canvas id="game" width="1280" height="960"></canvas>
+  <canvas id="minimap" width="160" height="160"></canvas>
+  <div class="hud"><div class="top"><div class="bar" title="Топливо"><div id="fuelFill" class="fill"></div></div><div class="bar" title="Здоровье"><div id="hpFill" class="fill" style="background:linear-gradient(90deg,#ff8e53,#ff5252)"></div></div></div></div>
+  <div id="countdown" class="countdown">3</div>
+</div>
+</main>
+<footer><span class="muted">WASD/стрелки — движение | мышь — башня | пробел — выстрел | колесо — масштаб</span></footer></div>
+<script>document.getElementById("nav").innerHTML=nav();</script>
+</body></html>
